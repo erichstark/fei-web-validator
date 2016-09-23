@@ -24,6 +24,7 @@
   "homepage": "https://github.com/erichstark/fei-web-validator#readme",
   "dependencies": {
     "decompress-zip": "^0.3.0",
-    "html-validator": "^2.0.1"
+    "html-validator": "^2.0.1",
+    "klaw": "^1.3.0"
   }
 }
