@@ -14,4 +14,5 @@ Tested on macOS Sierra with node.js 6.6.0.
 7. Open **file_with_results.txt** to see where is non valid files.
 
 Sample output in terminal: 
+
 ![alt text](https://github.com/erichstark/fei-web-validator/blob/master/docs/img/terminal_output.png "Program output.")
