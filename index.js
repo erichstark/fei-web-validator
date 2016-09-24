@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var validator = require('html-validator');
+var klaw = require('klaw');
 var DecompressZip = require('decompress-zip');
 
 //var out = fs.readdirSync("../6041/");
@@ -8,31 +9,30 @@ var DecompressZip = require('decompress-zip');
 //console.log("data: ", out);
 //
 var options = {
-    url: 'https://validator.nu',
+    url: 'https://html5.validator.nu',
     format: 'text'
 }
 
 var students = [];
 
-
-var klaw = require('klaw')
-
-
+var inputDirectory = "../" + process.argv[2] + "/";
+//console.log("inputDirectory: ", "../" + inputDirectory + "/");
 
 
-fs.readdir("../moodle/", function(err, files) {
+fs.readdir(inputDirectory, function(err, files) {
     //console.log("files: ", files);
 
     files.forEach(function(file) {
         if (file.includes(".zip")) {
-            //unZipFile("../moodle/" + file);
+            //unZipFile(inputDirectory + file);
             //
             //
             //
-            var filePath = "../moodle/" + file;
+            var filePath = inputDirectory + file;
 
             var cutAt = getStrPosition(filePath, "_", 2);
             var outputPath = filePath.substring(0, cutAt);
+            //console.log("output: ", outputPath);
             var unzipper = new DecompressZip(filePath);
 
             unzipper.on('error', function(err) {
@@ -47,6 +47,7 @@ fs.readdir("../moodle/", function(err, files) {
                     .on('data', function(item) {
                         if (!item.path.includes('__MACOSX') && item.path.endsWith('.html')) {
                             items.push();
+
                             fs.readFile(item.path, 'utf8', function(err, html) {
                                 if (err) {
                                     throw err;
@@ -93,7 +94,8 @@ fs.readdir("../moodle/", function(err, files) {
                                     // }
                                     //
                                 });
-                                //}, 2000);
+
+
 
                             });
                         }
@@ -102,13 +104,15 @@ fs.readdir("../moodle/", function(err, files) {
                     })
                     .on('end', function() {
                         //console.log(outputPath);
-                        console.dir(items) // => [ ... array of files]
+                        //console.dir(items) // => [ ... array of files]
 
                         // items.forEach(function(sourceFile) {
 
                         // });
                     })
             });
+
+
 
             // unzipper.on('progress', function(fileIndex, fileCount) {
             //     console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
@@ -128,26 +132,37 @@ fs.readdir("../moodle/", function(err, files) {
 // files.forEach(function(name) {
 //     if (name.includes(".zip")) {
 //         //console.log("filee: ", name);
-//         unZipFile("../moodle/" + name);
+//         unZipFile(inputDirectory + name);
 //     }
 // });
 // //console.log("robim zadania");
 // setTimeout(function() {
-//     walk("../moodle/");
+//     walk(inputDirectory);
 // }, 2000);
 
 
 
-// setTimeout(function() {
-//     for (var i = 0; i < students.length; i++) {
-//         console.log("\nstudent: ", students[i].studentId);
-//         for (var j = 0; j < students[i].html.length; j++) {
-//             console.log("file: ", students[i].html[j].file);
-//             console.log("error: ", students[i].html[j].error);
-//         }
-//     }
+setTimeout(function() {
+    for (var i = 0; i < students.length; i++) {
+        var hasError = false;
+        console.log("\nStudent: ", students[i].studentId);
+        for (var j = 0; j < students[i].html.length; j++) {
+            if (students[i].html[j].error.includes("There were errors.")) {
+                //console.log("error: ", students[i].html[j].error);
+                // mozno kontrolovat aj warningy
+                //console.log("Error in file: ", students[i].html[j].file);
+                hasError = true;
+                break;
+            }
+        }
+        if (hasError) {
+            console.log("PROBLEM!");
+        } else {
+            console.log("OK.");
+        }
+    }
+}, 6000);
 
-// }, 5000);
 
 
 // function validateTimeout(sourceFile) {
@@ -250,16 +265,16 @@ function getStrPosition(str, m, i) {
 }
 
 // function getProjectsFromDir() {
-//     var files = fs.readdirSync("../moodle/");
+//     var files = fs.readdirSync(inputDirectory);
 //     files.forEach(function(name) {
 //         if (name.includes(".zip")) {
 //             //console.log("filee: ", name);
-//             unZipFile("../moodle/" + name);
+//             unZipFile(inputDirectory + name);
 //         }
 //     });
 //     //console.log("robim zadania");
 //     setTimeout(function() {
-//         walk("../moodle/");
+//         walk(inputDirectory);
 //     }, 2000);
 // }
 
