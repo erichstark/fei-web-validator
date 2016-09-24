@@ -12,3 +12,6 @@ Tested on macOS Sierra with node.js 6.6.0.
 5. Run **npm install** to install all dependencies for validator.
 6. Run **node index.js folder_to_validate > file_with_results.txt**
 7. Open **file_with_results.txt** to see where is non valid files.
+
+Sample output in terminal: 
+![alt text](https://github.com/erichstark/fei-web-validator/blob/master/docs/img/terminal_output.png "Program output.")
